@@ -1,0 +1,28 @@
+{
+  "name": "my-projects-rest-api",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate:local": "wrangler d1 migrations apply project_db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply project_db --remote"
+  },
+  "dependencies": {
+    "@cloudflare/vite-plugin": "^1.33.2",
+    "bcryptjs": "^3.0.3",
+    "drizzle-orm": "^0.45.2",
+    "hono": "^4.12.7",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "drizzle-kit": "^0.31.10",
+    "eslint": "^10.0.3",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.4.0",
+    "prettier": "3.8.1",
+    "wrangler": "^4.85.0"
+  }
+}
