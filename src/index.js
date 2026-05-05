@@ -1,5 +1,7 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { rateLimiter } from "hono-rate-limiter"
+
 import auth from './routes/auth.js'
 import projects from './routes/projects.js'
 import tasks from './routes/tasks.js'
@@ -9,6 +11,13 @@ import { sendError } from './utils/response.js'
 
 const app = new Hono()
 const api = new Hono()
+
+app.use(
+  rateLimiter({
+    binding: (c) =>c.env.AUTH_LIMITER,
+    keygenerator: (c) => c.req.header("cf-connecting-ip") ?? "",
+  })
+);
 
 app.use('*', async (c, next) => {
   c.set('traceId', crypto.randomUUID())
