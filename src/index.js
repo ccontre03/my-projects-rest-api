@@ -4,7 +4,6 @@ import auth from './routes/auth.js'
 import projects from './routes/projects.js'
 import tasks from './routes/tasks.js'
 import { authenticate } from './middleware/authenticate.js'
-import { createRateLimiter } from './middleware/rate-limit.js'
 import { isApiError } from './utils/errors.js'
 import { sendError } from './utils/response.js'
 
@@ -15,24 +14,6 @@ app.use('*', async (c, next) => {
   c.set('traceId', crypto.randomUUID())
   await next()
 })
-
-app.use(
-  createRateLimiter({
-    limit: 100,
-    windowMs: 60 * 1000,
-    keyGenerator: (c) => c.req.header('cf-connecting-ip') ?? '',
-    message: (c) => {
-      return {
-        error: {
-          code: 'TOO_MANY_REQUESTS',
-          message: 'Too many requests, please try again later.',
-          details: [],
-          trace_id: c.get('traceId'),
-        },
-      }
-    },
-  }),
-)
 
 app.use(
   '/api/*',
